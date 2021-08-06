@@ -104,3 +104,4 @@ theme: fluid
 deploy:
   type: git
   repo: https://github.com/SuXss/SuXss.github.io.git
+  branch: master

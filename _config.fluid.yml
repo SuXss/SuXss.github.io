@@ -103,5 +103,5 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/SuXss/SuXss.github.io.git
+  repo: https://github.com/suxss/suxss.github.io.git
   branch: master

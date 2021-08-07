@@ -37,6 +37,10 @@
 
 <!-- 自定义样式保持在最底部 -->
 
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/suxss/image/toubudaziji.css">
+
+
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
@@ -146,7 +150,7 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/wallroom-3840x2160-bg-b158248.jpg') no-repeat center center;
+         style="background: url('https://cdn.jsdelivr.net/gh/suxss/image/wallroom-3840x2160-bg-b158248.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -428,7 +432,34 @@
       var typing = Fluid.plugins.typing;
       var title = document.getElementById('subtitle').title;
       
-      typing(title)
+      $.ajax({
+        type: 'GET',
+        url: 'https://v1.jinrishici.com/all',
+        headers: {},
+        dataType: 'json',
+        success: function (result) {
+          var text;
+          if (result) {
+            var keys = 'content'.split('.')
+            if (result instanceof Array) {
+              result = result[0]
+            }
+            for (const k of keys) {
+              var value = result[k]
+              if (typeof value === 'string') {
+                text = value
+                break
+              } else if (value instanceof Object) {
+                result = value
+              }
+            }
+          }
+          text ? typing(text) : typing(title);
+        },
+        error: function () {
+          typing(title)
+        }
+      })
       
     })(window, document);
   </script>
@@ -444,6 +475,10 @@
 
 
 
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/suxss/image/yinghua.js"></script>
 
 
 

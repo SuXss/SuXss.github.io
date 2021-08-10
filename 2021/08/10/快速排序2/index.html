@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="书接上回以及Python与C性能比较">
+  <meta name="author" content="熊赛斯">
+  <meta name="keywords" content="">
+  
+  <title>快速排序（二） - xss的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/suxss/image/toubudaziji.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"suxss.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":100,"cursorChar":"|","loop":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Xss</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/suxss/image/2021/wallhaven-7215ry.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="快速排序（二）">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-10 17:20" pubdate>
+        2021年8月10日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">快速排序（二）</h1>
+            
+            <div class="markdown-body">
+              <p>昨天看着原理大致地写了写快速排序的Python实现。主要是把原列表分成了三块：小于参考数的、等于参考数的、大于参考数的。</p>
+<p>遍历列表，看看每个数属于哪一类，接着将它们分别放入三个列表中，对其中不等于参考数的两个列表运用函数递归排序后在拼接起来。</p>
+<p>用Python可以很方便的实现，因为Python的变量所占用的内存空间不是恒定不变的，在列表上的体现就是创建一个新列表时不需要声明其长度。而大部分语言在声明变量时就要为其分配一个固定大小的内存空间，体现在列表（或者数组）上就是其长度在一开始就是固定的。当然可以在一开始就设置成长度足够大的列表（或数组），然而这样必然会很大比列的内存空间浪费。因此，如果要直接将昨天的代码改写成其他语言，基本上是运行效率不高的。于是，今天来试着改一改昨天的代码。</p>
+<h2 id="python代码的改写"><a class="markdownIt-Anchor" href="#python代码的改写"></a> Python代码的改写</h2>
+<p>昨天的快速排序代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">quick_sort_1</span>(<span class="hljs-params">num_list: <span class="hljs-built_in">list</span></span>) -&gt; <span class="hljs-built_in">list</span>:</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(num_list) &gt; <span class="hljs-number">1</span>:<br>        x = <span class="hljs-built_in">len</span>(num_list)//<span class="hljs-number">2</span><br>        list_1 = []<br>        list_3 = []<br>        list_2 = []<br>        <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> num_list:<br>            <span class="hljs-keyword">if</span> item &lt; num_list[x]:<br>                list_1.append(item)<br>            <span class="hljs-keyword">elif</span> item &gt; num_list[x]:<br>                list_2.append(item)<br>            <span class="hljs-keyword">else</span>:<br>                list_3.append(item)<br>        sorted_list = quick_sort_1(list_1)<br>        sorted_list.extend(list_3)<br>        sorted_list.extend(quick_sort_1(list_2))<br>        <span class="hljs-keyword">return</span> sorted_list<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> num_list<br></code></pre></div></td></tr></table></figure>
+<p>关键在于如何修改，划分原列表，使其分为多个部分。</p>
+<p>这里给出三种基于在原列表上交换两数的方法</p>
+<ul>
+<li>第一种</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">quick_sort_2</span>(<span class="hljs-params">num_list: <span class="hljs-built_in">list</span></span>) -&gt; <span class="hljs-built_in">list</span>:</span><br>    i = <span class="hljs-number">0</span><br>    j = <span class="hljs-built_in">len</span>(num_list) - <span class="hljs-number">1</span><br>    <span class="hljs-keyword">if</span> j &gt; i:<br>        x = num_list[i]<br>        <span class="hljs-keyword">while</span> i &lt; j:<br>            <span class="hljs-keyword">while</span> num_list[j] &gt;= x <span class="hljs-keyword">and</span> i &lt; j:<br>                j -= <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> i &lt; j:<br>                num_list[i], num_list[j] = num_list[j], num_list[i]<br>                i += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">while</span> num_list[i] &lt;= x <span class="hljs-keyword">and</span> i &lt; j:<br>                i += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> i &lt; j:<br>                num_list[i], num_list[j] = num_list[j], num_list[i]<br>                j -= <span class="hljs-number">1</span><br>        sorted_list = quick_sort_2(num_list[:i])<br>        sorted_list.append(num_list[i])<br>        sorted_list.extend(quick_sort_2(num_list[i+<span class="hljs-number">1</span>:]))<br>        <span class="hljs-keyword">return</span> sorted_list<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> num_list<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>第二种</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">quick_sort_3</span>(<span class="hljs-params">num_list: <span class="hljs-built_in">list</span>, left, right</span>) -&gt; <span class="hljs-built_in">list</span>:</span><br>    i = left<br>    j = right<br>    <span class="hljs-keyword">if</span> j &gt; i:<br>        x = num_list[i]<br>        <span class="hljs-keyword">while</span> i &lt; j:<br>            <span class="hljs-keyword">while</span> num_list[j] &gt;= x <span class="hljs-keyword">and</span> i &lt; j:<br>                j -= <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> i &lt; j:<br>                num_list[i], num_list[j] = num_list[j], num_list[i]<br>                i += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">while</span> num_list[i] &lt;= x <span class="hljs-keyword">and</span> i &lt; j:<br>                i += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> i &lt; j:<br>                num_list[i], num_list[j] = num_list[j], num_list[i]<br>                j -= <span class="hljs-number">1</span><br>        sorted_list = quick_sort_3(num_list, left, i-<span class="hljs-number">1</span>)<br>        sorted_list.append(num_list[i])<br>        sorted_list.extend(quick_sort_3(num_list, i+<span class="hljs-number">1</span>, right))<br>        <span class="hljs-keyword">return</span> sorted_list<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> num_list[left: right+<span class="hljs-number">1</span>]<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>第三种</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">quick_sort_4</span>(<span class="hljs-params">num_list: <span class="hljs-built_in">list</span></span>) -&gt; <span class="hljs-built_in">list</span>:</span><br>    i = <span class="hljs-number">0</span><br>    j = <span class="hljs-built_in">len</span>(num_list) - <span class="hljs-number">1</span><br>    <span class="hljs-keyword">if</span> j &gt; i:<br>        x = num_list[i]<br>        <span class="hljs-keyword">while</span> i &lt; j:<br>            <span class="hljs-keyword">while</span> num_list[j] &gt;= x <span class="hljs-keyword">and</span> i &lt; j:<br>                j -= <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> i &lt; j:<br>                num_list[i], num_list[j] = num_list[j], num_list[i]<br>                i += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">while</span> num_list[i] &lt;= x <span class="hljs-keyword">and</span> i &lt; j:<br>                i += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> i &lt; j:<br>                num_list[i], num_list[j] = num_list[j], num_list[i]<br>                j -= <span class="hljs-number">1</span><br>        sorted_list = quick_sort_4(num_list[:j])<br>        sorted_list.extend(num_list[j:i+<span class="hljs-number">1</span>])<br>        sorted_list.extend(quick_sort_4(num_list[i+<span class="hljs-number">1</span>:]))<br>        <span class="hljs-keyword">return</span> sorted_list<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> num_list<br></code></pre></div></td></tr></table></figure>
+<p>运行速度和昨天的都差不多</p>
+<h2 id="改写为c语言"><a class="markdownIt-Anchor" href="#改写为c语言"></a> 改写为C语言</h2>
+<p>将上面第二种方法改写为C语言，代码如下</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">quick_sort</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a[], <span class="hljs-keyword">int</span> left, <span class="hljs-keyword">int</span> right)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> i=left, j=right, x, t;<br>    <span class="hljs-keyword">if</span>(j &gt; i)&#123;<br>        x = *(a+i);<br>        <span class="hljs-keyword">while</span> (i &lt; j)&#123;<br>            <span class="hljs-keyword">while</span> (*(a+(j)) &gt;= x &amp;&amp; i &lt; j)<br>                j--;<br>            <span class="hljs-keyword">if</span>(i &lt; j)&#123;<br>                t = *(a+i);<br>                *(a+(i++)) = *(a+j);<br>                *(a+j) = t;<br>            &#125;<br>            <span class="hljs-keyword">while</span> (*(a+i) &lt;= x &amp;&amp; i &lt; j)<br>                i++;<br>            <span class="hljs-keyword">if</span>(i &lt; j)&#123;<br>                t = *(a+i);<br>                *(a+i) = *(a+j);<br>                *(a+(j--)) = t;<br>            &#125;<br>        &#125;<br>        quick_sort(a, left, i<span class="hljs-number">-1</span>);<br>        quick_sort(a, i+<span class="hljs-number">1</span>, right);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>由于C语言速度太快了，所以这次测试10万个数的排序</p>
+<p>完整测试代码如下</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;stdio.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;time.h&gt;</span></span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> N 100000</span><br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pprint</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a[], <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i)<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d  &quot;</span>, *(a + i));<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">quick_sort</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a[], <span class="hljs-keyword">int</span> left, <span class="hljs-keyword">int</span> right)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> i = left, j = right, x, t;<br>    <span class="hljs-keyword">if</span> (j &gt; i) &#123;<br>        x = *(a + i);<br>        <span class="hljs-keyword">while</span> (i &lt; j) &#123;<br>            <span class="hljs-keyword">while</span> (*(a + (j)) &gt;= x &amp;&amp; i &lt; j)<br>                j--;<br>            <span class="hljs-keyword">if</span> (i &lt; j) &#123;<br>                t = *(a + i);<br>                *(a + (i++)) = *(a + j);<br>                *(a + j) = t;<br>            &#125;<br>            <span class="hljs-keyword">while</span> (*(a + i) &lt;= x &amp;&amp; i &lt; j)<br>                i++;<br>            <span class="hljs-keyword">if</span> (i &lt; j) &#123;<br>                t = *(a + i);<br>                *(a + i) = *(a + j);<br>                *(a + (j--)) = t;<br>            &#125;<br>        &#125;<br>        quick_sort(a, left, i - <span class="hljs-number">1</span>);<br>        quick_sort(a, i + <span class="hljs-number">1</span>, right);<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    srand((<span class="hljs-keyword">unsigned</span>) time(<span class="hljs-literal">NULL</span>));<br>    <span class="hljs-keyword">int</span> a[N] = &#123;<span class="hljs-number">0</span>,&#125;;<br>    <span class="hljs-keyword">double</span> duration;<br>    <span class="hljs-keyword">time_t</span> start_time, end_time;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i)<br>        *(a + i) = rand() % N;<br><span class="hljs-comment">//    pprint(a, N);</span><br>    start_time = clock();<br>    quick_sort(a, <span class="hljs-number">0</span>, N);<br>    end_time = clock();<br>    duration = (<span class="hljs-keyword">double</span>) (end_time - start_time) / CLK_TCK;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%lfs\n&quot;</span>, duration);<br><span class="hljs-comment">//    pprint(a, N);</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>运行结果如下</p>
+<figure class="highlight"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs">0.011000s<br><br>进程已结束，退出代码为 0<br></code></pre></div></td></tr></table></figure>
+<p>昨天Python的快速排序<strong>1万</strong>个数需要大概<strong>0.015</strong>秒与C语言快速排序<strong>10万</strong>个所花时间差不多</p>
+<h2 id="python代码的优化"><a class="markdownIt-Anchor" href="#python代码的优化"></a> Python代码的优化</h2>
+<p>Python版本的快速排序排序10万个数的运行时间如下</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">quick_sort</span>:<span class="hljs-number">0</span>.<span class="hljs-number">16658687591552734</span>s<br></code></pre></div></td></tr></table></figure>
+<p>Python的功能是十分强大的，但是居然落后这么多，让我十分不甘心。</p>
+<p>下面我们来优化Python版本的代码</p>
+<h3 id="1把所有变量都转为局部变量"><a class="markdownIt-Anchor" href="#1把所有变量都转为局部变量"></a> 1.把所有变量都转为局部变量</h3>
+<p>直接把之前<code>if __name__ == '__main__':</code>里的语句写入<code>main</code>函数</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span>():</span><br>    <span class="hljs-keyword">from</span> random <span class="hljs-keyword">import</span> randint<br>    <span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> time<br>    n = <span class="hljs-number">100000</span><br>    a = []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>        a.append(randint(<span class="hljs-number">1</span>, n))<br><br>    t1 = time()<br>    c = quick_sort(a)<br>    t2 = time()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;quick_sort:<span class="hljs-subst">&#123;t2 - t1&#125;</span>s&quot;</span>)<br></code></pre></div></td></tr></table></figure>
+<p>优化结果</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">quick_sort</span>:<span class="hljs-number">0</span>.<span class="hljs-number">15358948707580566</span>s<br></code></pre></div></td></tr></table></figure>
+<p>效果不是很明显</p>
+<h3 id="2使用pypy3"><a class="markdownIt-Anchor" href="#2使用pypy3"></a> 2.使用pypy3</h3>
+<p>运行结果</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">quick_sort_3</span>:<span class="hljs-number">0</span>.<span class="hljs-number">023967981338500977</span>s<br></code></pre></div></td></tr></table></figure>
+<p>大约快了8倍，多次运行发现快的可以到<code>0.02s</code></p>
+<h3 id="3其他"><a class="markdownIt-Anchor" href="#3其他"></a> 3.其他</h3>
+<p>还可以使用numpy库的array代替list</p>
+<p>但是我这里的代码用了较多的extend和append方法，如果用array无法实现数组原地修改，因此如果直接用的话速度反而会降下来</p>
+<p>其实Python里列表排序可以直接使用sort方法</p>
+<p>代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> random <span class="hljs-keyword">import</span> randint<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> time<br>n = <span class="hljs-number">100000</span><br>a = []<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>a.append(randint(<span class="hljs-number">1</span>, n))<br>t1 = time()<br>a.sort()<br>t2 = time()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;quick_sort:<span class="hljs-subst">&#123;t2 - t1&#125;</span>s&quot;</span>)<br></code></pre></div></td></tr></table></figure>
+<p>使用pypy3运行，运行时间为<code>0.010~0.011s</code>左右，与C语言持平</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/python/">python</a>
+                    
+                      <a class="hover-with-bg" href="/tags/c/">c</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/09/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/">
+                        <span class="hidden-mobile">快速排序（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/gh/suxss/image/yinghua.js"></script>
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

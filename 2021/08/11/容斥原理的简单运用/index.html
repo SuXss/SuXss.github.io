@@ -14,11 +14,11 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="这是一个示例文件">
+  <meta name="description" content="由一道小题目引发的讨论">
   <meta name="author" content="熊赛斯">
   <meta name="keywords" content="">
   
-  <title>markdown示例 - xss的博客</title>
+  <title>容斥原理的简单运用 - xss的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -166,12 +166,12 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('https://cdn.jsdelivr.net/gh/suxss/image/wallroom-3840x2160-bg-8c6afe1.jpg') no-repeat center center;
+         style="background: url('https://cdn.jsdelivr.net/gh/suxss/image/2021/wallhaven-57zvj9.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="markdown示例">
+            <span class="h2" id="subtitle" title="容斥原理的简单运用">
               
             </span>
 
@@ -181,8 +181,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-08-06 17:14" pubdate>
-        2021年8月6日 下午
+      <time datetime="2021-08-11 14:15" pubdate>
+        2021年8月11日 下午
       </time>
     </span>
   
@@ -193,7 +193,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      320 字
+      709 字
     </span>
   
 
@@ -203,7 +203,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5
+      10
        分钟
     </span>
   
@@ -233,56 +233,46 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">markdown示例</h1>
+            <h1 style="display: none">容斥原理的简单运用</h1>
             
             <div class="markdown-body">
-              <h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th></th>
-<th>周一</th>
-<th>周二</th>
-<th>周三</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>上午</td>
-<td>睡觉</td>
-<td>睡觉</td>
-<td>睡觉</td>
-</tr>
-<tr>
-<td>下午</td>
-<td>睡觉</td>
-<td>睡觉</td>
-<td>睡觉</td>
-</tr>
-<tr>
-<td>晚上</td>
-<td>打豆豆</td>
-<td>打豆豆</td>
-<td>打豆豆</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> scrapy<br><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">from</span> weixindata.items <span class="hljs-keyword">import</span> WeixindataItem<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TeamdataSpider</span>(<span class="hljs-params">scrapy.Spider</span>):</span><br>    name = <span class="hljs-string">&#x27;teamdata&#x27;</span><br>    start_urls = [<br>        <span class="hljs-string">&#x27;https://algo.weixin.qq.com/wealgo-bin/leaderboard/get_all_leaderboard?page_index=1&amp;page_size=10&#x27;</span>]<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parse</span>(<span class="hljs-params">self, response</span>):</span><br>        re = json.loads(response.text)<br>        item = WeixindataItem()<br>        page = <span class="hljs-built_in">int</span>(response.url.split(<span class="hljs-string">&#x27;&amp;&#x27;</span>)[-<span class="hljs-number">2</span>].split(<span class="hljs-string">&#x27;=&#x27;</span>)[-<span class="hljs-number">1</span>])<br>        list_1 = [<br>            <span class="hljs-string">&#x27;那么多C带带我怎么了&#x27;</span>,<br>            <span class="hljs-string">&#x27;吃得粮中粮，方为狗中皇&#x27;</span>,<br>            <span class="hljs-string">&#x27;在马里亚纳海沟里学深度学习&#x27;</span>,<br>            <span class="hljs-string">&#x27;平安喜乐&#x27;</span>,<br>            <span class="hljs-string">&#x27;R&amp;Q&#x27;</span>,<br>            <span class="hljs-string">&#x27;苏大启航队&#x27;</span>,<br>            <span class="hljs-string">&#x27;HelloWorld&#x27;</span>,<br>            <span class="hljs-string">&#x27;乐乐乐&#x27;</span>,<br>            <span class="hljs-string">&#x27;long_bo_heng&#x27;</span>,<br>            <span class="hljs-string">&#x27;Krista八千鸟&#x27;</span>,<br>            <span class="hljs-string">&#x27;今晚海底捞&#x27;</span>,<br>            <span class="hljs-string">&#x27;诺飞扬&#x27;</span>,<br>            <span class="hljs-string">&#x27;twohzre小队&#x27;</span>,<br>            <span class="hljs-string">&#x27;jokers&#x27;</span>,<br>            <span class="hljs-string">&#x27;摸鱼划水&#x27;</span>]<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> re[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;detail&#x27;</span>]:<br>            <span class="hljs-keyword">if</span> i[<span class="hljs-string">&#x27;team_name&#x27;</span>] <span class="hljs-keyword">in</span> list_1:<br>                item[<span class="hljs-string">&#x27;team_name&#x27;</span>] = i[<span class="hljs-string">&#x27;team_name&#x27;</span>]<br>                item[<span class="hljs-string">&#x27;team_seq&#x27;</span>] = i[<span class="hljs-string">&#x27;seq&#x27;</span>]<br>                item[<span class="hljs-string">&#x27;team_score&#x27;</span>] = i[<span class="hljs-string">&#x27;score&#x27;</span>]<br>                <span class="hljs-keyword">yield</span> item<br>        <span class="hljs-built_in">print</span>(page)<br>        <span class="hljs-keyword">if</span> page &lt; <span class="hljs-number">146</span>:<br>            <span class="hljs-keyword">yield</span> scrapy.Request(<br>                url=<span class="hljs-string">&#x27;https://algo.weixin.qq.com/wealgo-bin/leaderboard/get_all_leaderboard?page_index=&#x27;</span> + <span class="hljs-built_in">str</span>(<br>                    page + <span class="hljs-number">1</span>) + <span class="hljs-string">&#x27;&amp;page_size=10&#x27;</span>)<br><br></code></pre></div></td></tr></table></figure>
-<h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h2><script type="math/tex; mode=display">
-b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,dx\\
-\frac{\pi^2}{6}=\sum_{n=1}^\infty{\frac{1}{n^2}}</script><h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><p><img src="https://cdn.jsdelivr.net/gh/suxss/image/wallroom-2880x1800-bg-f296f86.jpg" srcset="/img/loading.gif" lazyload alt="图片1"></p>
-<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><ol>
-<li>吃饭</li>
-<li>睡觉</li>
-<li>打豆豆</li>
-</ol>
-<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><div class="note note-info">
-            <p>关于我打豆豆这档事</p>
-          </div>
-<div class="note note-danger">
-            <p>打豆豆很危险</p>
-          </div>
+              <p>昨天看了一道题，题目大概是甲乙丙分别多少秒放一次鞭炮， 然后问一个时间段里能听到多少响。<br>其实就是给出三个正整数$n_1, n_2, n_3$，再给一个$n$，问$1\sim n$​秒内有多少个不重复的数被它们其中一个整除。</p>
+<p>用集合的语言描述如下</p>
+<script type="math/tex; mode=display">
+n_1,n_2,n_3,n已知,A=\{k|k \in \\N^*,k\leq n, k|n_1或k|n_2或k|n_3\},求|A|.</script><p>为了计算集合$A$​所含元素个数，可以先计算下面三个集合所含元素个数，再减去重复计数的个数</p>
+<script type="math/tex; mode=display">
+A_1=\{k|k \in \\N^*,k\leq n, k|n_1\}\\A_2=\{k|k \in \\N^*,k\leq n, k|n_2\}\\A_3=\{k|k \in \\N^*,k\leq n, k|n_3\}</script><p><img src="https://cdn.jsdelivr.net/gh/suxss/image/2021/绘图1.jpg" srcset="/img/loading.gif" lazyload alt="图1"></p>
+<p>其中$A_1\cap A_2,A_1\cap A_3,A_2\cap A_3$​里的元素被多算了，因此要减去</p>
+<p>如果直接减去$|A_1\cap A_2|+|A_1\cap A_3|+|A_2\cap A_3|$​的话，$A_1\cap A_2\cap A_3$里的元素又多减了，因此得加上，</p>
+<p>于是，得到公式</p>
+<script type="math/tex; mode=display">
+A_1 \cup A_2\cup A_3=|A_1|+|A_2|+|A_3|-|A_1\cap A_2|-|A_1\cap A_3|-|A_2\cap A_3|+|A_1\cap A_2\cap A_3|</script><p>整理一下就是</p>
+<script type="math/tex; mode=display">
+\bigcup_{i=1}^3 A_i=\sum_{i=1}^3(-1)^i\sum_{1\leq j_1\cdots \leq j_i\leq3}|\bigcap_{k=1}^iA_{j_k}|</script><p>接下来就是去求每一项，其中关键的是求最小公倍数</p>
+<p>三个数的最小公倍数可以用两组两个数的最小公倍数表示</p>
+<script type="math/tex; mode=display">
+[n_1,n_2,n_3]=[[n_1,n_2],[n_2,n_3]]</script><p>证明很简单，如下</p>
+<script type="math/tex; mode=display">
+\forall k,\space k|n_1,k|n_2,k|n_3; \\
+\left\{ {\begin{array}{*{20}{c}}
+{k|{n_1}}\\
+{k|{n_2}}
+\end{array} \Leftrightarrow k|[{n_1},{n_2}]}; \right.\\
+k|[{n_1},{n_2}],k|[{n_1},{n_3}],k|[{n_2},{n_3}];\\
+k|[[n_1,n_2],[n_2,n_3]]</script><p>由此我们得到 这三个数的任意的公倍数都被$[[n_1,n_2],[n_2,n_3]]$整除</p>
+<p>而$[[n_1,n_2],[n_2,n_3]]$显然是$n_1, n_2, n_3$​的公倍数，证毕</p>
+<p>而最小公倍数与最大公因数有如下关系</p>
+<script type="math/tex; mode=display">
+[a,b]\cdot(a,b)=ab</script><p>因此要求最小公倍数只需求最大公因数，这就可以用辗转相除法</p>
+<p>Python代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">successive_division</span>(<span class="hljs-params">a: <span class="hljs-built_in">int</span>, b: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:</span>  <span class="hljs-comment"># 辗转相除法</span><br>    <span class="hljs-keyword">while</span> a % b != <span class="hljs-number">0</span>:<br>        a, b = b, a % b<br>    <span class="hljs-keyword">return</span> b<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">least_common_multiple</span>(<span class="hljs-params">a: <span class="hljs-built_in">int</span>, b: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:</span>  <span class="hljs-comment"># 最小公倍数</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">int</span>(a * b / successive_division(a, b))<br></code></pre></div></td></tr></table></figure>
+<p>C语言代码如下</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">successive_division</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> i = a, j = b, t;<br>    <span class="hljs-keyword">while</span> (i % j != <span class="hljs-number">0</span>) &#123;<br>        t = i;<br>        i = j;<br>        j = t % j;<br>    &#125;<br>    <span class="hljs-keyword">return</span> j;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">least_common_multiple</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a * b / successive_division(a, b);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>依靠这个就能写出求解原问题的函数</p>
+<p>Python代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">solution</span>(<span class="hljs-params">n1: <span class="hljs-built_in">int</span>, n2: <span class="hljs-built_in">int</span>, n3: <span class="hljs-built_in">int</span>, n: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:</span><br>    result = n // n1 + n // n2 + n // n3<br>    result -= n // least_common_multiple(n1, n2) + n // least_common_multiple(n1, n3) + n // least_common_multiple(n2, n3)<br>    result += n // least_common_multiple(least_common_multiple(n1, n2), least_common_multiple(n1, n3))<br>    <span class="hljs-keyword">return</span> result<br></code></pre></div></td></tr></table></figure>
+<p>C语言代码如下</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">solution</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n1, <span class="hljs-keyword">int</span> n2, <span class="hljs-keyword">int</span> n3, <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> result = <span class="hljs-number">0</span>;<br>    result += n / n1 + n / n2 + n / n3;<br>    result -= n / least_common_multiple(n1, n2) + n / least_common_multiple(n1, n3) + n / least_common_multiple(n2, n3);<br>    result += n / least_common_multiple(least_common_multiple(n1, n2), least_common_multiple(n1, n3));<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
             </div>
             <hr>
@@ -292,7 +282,9 @@ b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,dx\\
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a>
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0/%E7%AE%97%E6%B3%95/">算法</a>
                     
                   </div>
                 
@@ -319,18 +311,12 @@ b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,dx\\
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/08/07/%E4%B8%8B%E5%AD%A6%E6%9C%9F%E8%AF%BE%E8%A1%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">下学期课表</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/08/06/%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD/">
-                        <span class="hidden-mobile">暴打王秋阳的第一天</span>
+                      <a href="/2021/08/10/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F2/">
+                        <span class="hidden-mobile">快速排序（二）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

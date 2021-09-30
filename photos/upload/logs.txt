@@ -1,0 +1,25 @@
+URL by file name: https://f002.backblazeb2.com/file/photosalbum/%E4%BC%99%E9%A3%9F/IMG_20201217_111018.jpg
+URL by fileId: https://f002.backblazeb2.com/b2api/v2/b2_download_file_by_id?fileId=4_zb8e1f4c93305f8e974b00310_f11884219f2523bab_d20210921_m100345_c002_v0001164_t0028
+{
+    "accountId": "814935894030",
+    "action": "upload",
+    "bucketId": "b8e1f4c93305f8e974b00310",
+    "contentMd5": "57ae1d952eb1292032a9519ae9899940",
+    "contentSha1": "077a533f1b373b45f62a4bb09aec031f885063c9",
+    "contentType": "image/jpeg",
+    "fileId": "4_zb8e1f4c93305f8e974b00310_f11884219f2523bab_d20210921_m100345_c002_v0001164_t0028",
+    "fileInfo": {
+        "src_last_modified_millis": "1632213679546"
+    },
+    "fileName": "\u4f19\u98df/IMG_20201217_111018.jpg",
+    "fileRetention": {
+        "mode": null,
+        "retainUntilTimestamp": null
+    },
+    "legalHold": null,
+    "serverSideEncryption": {
+        "mode": "none"
+    },
+    "size": 595431,
+    "uploadTimestamp": 1632218625000
+}

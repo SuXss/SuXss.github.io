@@ -1,0 +1,39 @@
+<%
+page.layout = "talking"
+page.title = theme.talking.title || __('talking.title')
+page.subtitle = theme.talking.subtitle || __('talking.subtitle')
+page.banner_img = theme.talking.banner_img
+page.banner_img_height = theme.talking.banner_img_height
+page.banner_mask_alpha = theme.talking.banner_mask_alpha
+page.comments = false
+%>
+
+<article class="markdown-body">
+  <%- page.content %>
+  <hr>
+  <%- js_ex(theme.static_prefix.artitalk, 'artitalk.min.js') %>
+    <div id="artitalk_main"></div>
+    <script>
+        new Artitalk({
+            appId: '<%- theme.talking.artitalk.appId %>',
+            appKey: '<%- theme.talking.artitalk.appKey %>',
+            serverURL: '<%- theme.talking.artitalk.serverURL %>',
+            atComment: <% if(theme.talking.artitalk.atComment) {%>1<%} else {%>0<% } %>,
+<% if(theme.talking.artitalk.cssurl) {%>cssUrl: '<%- theme.talking.artitalk.cssurl %>',<% } %>
+        })
+    </script>
+</article>
+
+<% if(page.comments && theme.post.comments.enable) { %>
+    <hr>
+    <!-- Comments -->
+    <article class="comments" id="comments">
+      <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; padding-bottom: 10px;">
+        <i class="iconfont icon-comments" aria-hidden="true"></i>
+        <span><%= __('comment') %></span>
+      </div>
+      <hr>
+      <% var type = '_partial/comments/' + theme.post.comments.type %>
+      <%- partial(type) %>
+    </article>
+<% } %>

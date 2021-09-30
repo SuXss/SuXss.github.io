@@ -1,0 +1,7 @@
+先上传图片
+然后双击run.bat生成json文件
+将json文件粘贴到source\photos下
+最后部署网站
+
+
+注意：照片墙js文件在source\js下，可在此文件中修改图床路径

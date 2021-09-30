@@ -1,4 +1,6 @@
 @echo off
 D:
-cd D:\suxss.github.io
-hexo clean&&hexo g&&hexo d
+cd D:\suxss.tk
+git add .
+git commit  -m 'auto'
+git push

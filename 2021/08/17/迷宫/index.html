@@ -1,0 +1,879 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&quot;auto&quot;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="论如何把幼儿园题目做出高级感">
+  <meta name="author" content="熊赛斯">
+  <meta name="keywords" content="">
+  
+  <title>迷宫 - xss的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      
+        
+          
+          
+          
+        
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism-okaidia.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-numbers/prism-line-numbers.min.css" />
+      
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.22.0/plugins/line-numbers/prism-line-numbers.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/suxss/image/title.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/suxss/suxss.github.io/css/custom2.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/suxss/suxss.github.io/css/codeBlock.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"suxss.tk","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":100,"cursorChar":"|","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":true,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"JOxI0e673yNWSJjbttRBESxk-MdYXbMMI","app_key":"bdVLvBW1Q7pXBmovrbrHGtlD","server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Xss</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/photos">
+                <i class="iconfont icon-images"></i>
+                相册
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-codeforces"></i>
+                统计
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/archives/">
+                    <i class="iconfont icon-archive-fill"></i>
+                    归档
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/">
+                    <i class="iconfont icon-category-fill"></i>
+                    分类
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/tags/">
+                    <i class="iconfont icon-tags-fill"></i>
+                    标签
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/suxss/image/2021/wallhaven-m9wgx81.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="迷宫">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-17 18:33" pubdate>
+        2021年8月17日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" type="application/x-javascript"></script>
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">迷宫</h1>
+              <time dateTime="Tue Oct 18 2022 07:21:40 GMT+0800">
+               </time>
+
+            <div class="markdown-body">
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近看了道题，题目感觉还蛮好玩的，就做了做</p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">下图给出了一个迷宫的平面图，其中标记为 1 的为障碍，标记为 0 的为可 以通行的地方。
+010000
+000100
+001001
+110000
+迷宫的入口为左上角，出口为右下角，在迷宫中，只能从一个位置走到这 个它的上、下、左、右四个方向之一。
+对于上面的迷宫，从入口开始，可以按DRRURRDDDR 的顺序通过迷宫， 一共 10 步。其中 D、U、L、R
+分别表示向下、向上、向左、向右走。 对于下面这个更复杂的迷宫（30 行 50 列），请找出一种通过迷宫的方式，
+其使用的步数最少，在步数最少的前提下，请找出字典序最小的一个作为答案。
+ 请注意在字典序中D&lt;L&lt;R&lt;U。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<p>题目中的复杂迷宫如下</p>
+<div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">01010101001011001001010110010110100100001000101010
+00001000100000101010010000100000001001100110100101
+01111011010010001000001101001011100011000000010000
+01000000001010100011010000101000001010101011001011
+00011111000000101000010010100010100000101100000000
+11001000110101000010101100011010011010101011110111
+00011011010101001001001010000001000101001110000000
+10100000101000100110101010111110011000010000111010
+00111000001010100001100010000001000101001100001001
+11000110100001110010001001010101010101010001101000
+00010000100100000101001010101110100010101010000101
+11100100101001001000010000010101010100100100010100
+00000010000000101011001111010001100000101010100011
+10101010011100001000011000010110011110110100001000
+10101010100001101010100101000010100000111011101001
+10000000101100010000101100101101001011100000000100
+10101001000000010100100001000100000100011110101001
+00101001010101101001010100011010101101110000110101
+11001010000100001100000010100101000001000111000010
+00001000110000110101101000000100101001001000011101
+10100101000101000000001110110010110101101010100001
+00101000010000110101010000100010001001000100010101
+10100001000110010001000010101001010101011111010010
+00000100101000000110010100101001000001000000000010
+11010000001001110111001001000011101001011011101000
+00000110100010001000100000001000011101000000110011
+10101000101000100010001111100010101001010000001000
+10000010100101001010110000000100101010001011101000
+00111100001000010000000110111000000001000000001011
+10000001100111010111010001000110111010101101111000<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>其实题目很简单，就是幼儿园小学的小朋友玩的迷宫</p>
+<p>因此只需要把图画出来（比如用Excel, Python）</p>
+<p>然后找最短通路就行了</p>
+<p>但是，这种方法很不高级</p>
+<p>用编程的方法解决它更有意思</p>
+<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>题目比较简单，就不多解释代码了</p>
+<p>主要用到了广度优先，本质上是穷举</p>
+<p>每条路每次都走一步，谁先到终点谁就是最短路径</p>
+<p>为了避免重复，引入集合<code>history</code>记录历史走过的地点，其中的关键是这个历史是每条路共享的，如果其中有一条路A走到了路B或者自己之前走过的位置上，那路A肯定不是最短路径</p>
+<p>代码如下</p>
+<div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token builtin">map</span> <span class="token operator">=</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token comment"># 30 x 50 的矩阵</span>
+
+<span class="token comment"># DLRU</span>
+way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">&#125;</span>
+ways <span class="token operator">=</span> <span class="token punctuation">[</span>way<span class="token punctuation">,</span> <span class="token punctuation">]</span>
+history <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">&#125;</span>
+
+<span class="token keyword">while</span> <span class="token builtin">len</span><span class="token punctuation">(</span>ways<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    new_ways <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> item <span class="token keyword">in</span> ways<span class="token punctuation">:</span>
+        x<span class="token punctuation">,</span> y <span class="token operator">=</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">//</span> <span class="token number">50</span><span class="token punctuation">,</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">%</span> <span class="token number">50</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token punctuation">(</span><span class="token number">29</span><span class="token punctuation">,</span> <span class="token number">49</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token keyword">break</span>
+        <span class="token keyword">if</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">50</span> <span class="token keyword">not</span> <span class="token keyword">in</span> history <span class="token keyword">and</span> x <span class="token operator">&lt;</span> <span class="token number">29</span> <span class="token keyword">and</span> <span class="token keyword">not</span> <span class="token builtin">map</span><span class="token punctuation">[</span>x<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            new_way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'D'</span><span class="token punctuation">&#125;</span>
+            new_ways<span class="token punctuation">.</span>append<span class="token punctuation">(</span>new_way<span class="token punctuation">)</span>
+            history<span class="token punctuation">.</span>add<span class="token punctuation">(</span>new_way<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span> <span class="token keyword">not</span> <span class="token keyword">in</span> history <span class="token keyword">and</span> y <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">and</span> <span class="token keyword">not</span> <span class="token builtin">map</span><span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            new_way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'L'</span><span class="token punctuation">&#125;</span>
+            new_ways<span class="token punctuation">.</span>append<span class="token punctuation">(</span>new_way<span class="token punctuation">)</span>
+            history<span class="token punctuation">.</span>add<span class="token punctuation">(</span>new_way<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span> <span class="token keyword">not</span> <span class="token keyword">in</span> history <span class="token keyword">and</span> y <span class="token operator">&lt;</span> <span class="token number">49</span> <span class="token keyword">and</span> <span class="token keyword">not</span> <span class="token builtin">map</span><span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            new_way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'R'</span><span class="token punctuation">&#125;</span>
+            new_ways<span class="token punctuation">.</span>append<span class="token punctuation">(</span>new_way<span class="token punctuation">)</span>
+            history<span class="token punctuation">.</span>add<span class="token punctuation">(</span>new_way<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">50</span> <span class="token keyword">not</span> <span class="token keyword">in</span> history <span class="token keyword">and</span> x <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">and</span> <span class="token keyword">not</span> <span class="token builtin">map</span><span class="token punctuation">[</span>x<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            new_way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'U'</span><span class="token punctuation">&#125;</span>
+            new_ways<span class="token punctuation">.</span>append<span class="token punctuation">(</span>new_way<span class="token punctuation">)</span>
+            history<span class="token punctuation">.</span>add<span class="token punctuation">(</span>new_way<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    ways <span class="token operator">=</span> new_ways
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<p>结果如下</p>
+<div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">DDDDRRURRRRRRDRRRRDDDLDDRDDDDDDDDDDDDRDDRRRURRUURRDDDDRDRRRRRRDRRURRDDDRRRRUURUUUUUUULULLUUUURRRRUULLLUUUULLUUULUURRURRURURRRDDRRRRRDDRRDDLLLDDRRDDRDDLDDDLLDDLLLDLDDDLDDRRRRRRRRRDDDDDDRR
+186
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+<h1 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h1><p>进一步将寻路过程可视化，结果如下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/suxss/image/2021/test-min.gif" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>可视化代码</p>
+<ul>
+<li>1</li>
+</ul>
+<div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 画地图</span>
+<span class="token keyword">import</span> PIL
+<span class="token keyword">import</span> numpy
+
+<span class="token builtin">map</span> <span class="token operator">=</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+
+<span class="token keyword">def</span> <span class="token function">bigger</span><span class="token punctuation">(</span>matrix<span class="token punctuation">,</span> n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    x <span class="token operator">=</span> matrix<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    y <span class="token operator">=</span> matrix<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    bigmap <span class="token operator">=</span> numpy<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token operator">*</span>n<span class="token punctuation">,</span> y<span class="token operator">*</span>n<span class="token punctuation">)</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>numpy<span class="token punctuation">.</span>bool_<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">if</span> <span class="token builtin">map</span><span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span><span class="token punctuation">:</span>
+                bigmap<span class="token punctuation">[</span>n <span class="token operator">*</span> i<span class="token punctuation">:</span>n <span class="token operator">*</span> i <span class="token operator">+</span> n<span class="token punctuation">,</span> n <span class="token operator">*</span> j<span class="token punctuation">:</span>n <span class="token operator">*</span> j <span class="token operator">+</span> n<span class="token punctuation">]</span> <span class="token operator">=</span> numpy<span class="token punctuation">.</span>matrix<span class="token punctuation">(</span>numpy<span class="token punctuation">.</span>ones<span class="token punctuation">(</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span> n<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> bigmap
+
+
+<span class="token builtin">map</span> <span class="token operator">=</span> numpy<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>numpy<span class="token punctuation">.</span>bool_<span class="token punctuation">)</span>
+<span class="token builtin">map</span> <span class="token operator">=</span> numpy<span class="token punctuation">.</span>matrix<span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token builtin">map</span><span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span> <span class="token keyword">if</span> <span class="token builtin">map</span><span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span> <span class="token keyword">else</span> <span class="token number">1</span>
+
+bigmap <span class="token operator">=</span> bigger<span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">)</span>
+
+new_map <span class="token operator">=</span> PIL<span class="token punctuation">.</span>Image<span class="token punctuation">.</span>fromarray<span class="token punctuation">(</span>bigmap<span class="token punctuation">)</span>
+new_map<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+new_map<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">'map.png'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<ul>
+<li>2</li>
+</ul>
+<div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 画每一帧的图像</span>
+<span class="token keyword">import</span> turtle
+
+
+<span class="token builtin">map</span> <span class="token operator">=</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+
+<span class="token keyword">def</span> <span class="token function">bgpic</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> picname<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> picname <span class="token keyword">is</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> self<span class="token punctuation">.</span>_bgpicname
+    <span class="token keyword">if</span> picname <span class="token keyword">not</span> <span class="token keyword">in</span> self<span class="token punctuation">.</span>_bgpics<span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>_bgpics<span class="token punctuation">[</span>picname<span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>_image<span class="token punctuation">(</span>picname<span class="token punctuation">)</span>
+    self<span class="token punctuation">.</span>_setbgpic<span class="token punctuation">(</span>self<span class="token punctuation">.</span>_bgpic<span class="token punctuation">,</span> self<span class="token punctuation">.</span>_bgpics<span class="token punctuation">[</span>picname<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    self<span class="token punctuation">.</span>_bgpicname <span class="token operator">=</span> picname
+
+
+<span class="token keyword">def</span> <span class="token function">D</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> x<span class="token operator">-</span><span class="token number">782</span><span class="token operator">+</span><span class="token number">160</span><span class="token punctuation">,</span> y<span class="token operator">+</span><span class="token number">467</span><span class="token operator">-</span><span class="token number">160</span><span class="token operator">+</span><span class="token number">67</span>
+
+
+<span class="token keyword">def</span> <span class="token function">down</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">global</span> current
+    x<span class="token punctuation">,</span> y <span class="token operator">=</span> current<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> current<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    turtle<span class="token punctuation">.</span>goto<span class="token punctuation">(</span>D<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token operator">-</span><span class="token number">25</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    current <span class="token operator">=</span> <span class="token punctuation">[</span>x<span class="token punctuation">,</span> y<span class="token operator">-</span><span class="token number">25</span><span class="token punctuation">]</span>
+
+
+<span class="token keyword">def</span> <span class="token function">up</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">global</span> current
+    x<span class="token punctuation">,</span> y <span class="token operator">=</span> current<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> current<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    turtle<span class="token punctuation">.</span>goto<span class="token punctuation">(</span>D<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token operator">+</span><span class="token number">25</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    current <span class="token operator">=</span> <span class="token punctuation">[</span>x<span class="token punctuation">,</span> y <span class="token operator">+</span> <span class="token number">25</span><span class="token punctuation">]</span>
+
+
+<span class="token keyword">def</span> <span class="token function">left</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">global</span> current
+    x<span class="token punctuation">,</span> y <span class="token operator">=</span> current<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> current<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    turtle<span class="token punctuation">.</span>goto<span class="token punctuation">(</span>D<span class="token punctuation">(</span>x<span class="token operator">-</span><span class="token number">25</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    current <span class="token operator">=</span> <span class="token punctuation">[</span>x <span class="token operator">-</span> <span class="token number">25</span><span class="token punctuation">,</span> y<span class="token punctuation">]</span>
+
+
+<span class="token keyword">def</span> <span class="token function">right</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">global</span> current
+    x<span class="token punctuation">,</span> y <span class="token operator">=</span> current<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> current<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    turtle<span class="token punctuation">.</span>goto<span class="token punctuation">(</span>D<span class="token punctuation">(</span>x<span class="token operator">+</span><span class="token number">25</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    current <span class="token operator">=</span> <span class="token punctuation">[</span>x <span class="token operator">+</span> <span class="token number">25</span><span class="token punctuation">,</span> y<span class="token punctuation">]</span>
+
+
+<span class="token keyword">def</span> <span class="token function">parse_way</span><span class="token punctuation">(</span>way<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>way<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> way<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">'D'</span><span class="token punctuation">:</span>
+            down<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">elif</span> way<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">'U'</span><span class="token punctuation">:</span>
+            up<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">elif</span> way<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">'L'</span><span class="token punctuation">:</span>
+            left<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">elif</span> way<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">'R'</span><span class="token punctuation">:</span>
+            right<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>penup<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>goto<span class="token punctuation">(</span>D<span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>pendown<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">global</span> current
+    current <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">12</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">12</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">first</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    myWin <span class="token operator">=</span> turtle<span class="token punctuation">.</span>Screen<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>setup<span class="token punctuation">(</span>width<span class="token operator">=</span><span class="token number">1250</span><span class="token punctuation">,</span> height<span class="token operator">=</span><span class="token number">750</span><span class="token punctuation">,</span> startx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> starty<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>bgpic<span class="token punctuation">(</span><span class="token string">r'map.png'</span><span class="token punctuation">)</span>  <span class="token comment"># 这样设置。</span>
+    turtle<span class="token punctuation">.</span>speed<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>penup<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>setposition<span class="token punctuation">(</span>D<span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>pensize<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>pendown<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>colormode<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>pencolor<span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">global</span> current
+    current <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">12</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">12</span><span class="token punctuation">]</span>
+
+
+<span class="token keyword">def</span> <span class="token function">save</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 保存</span>
+    ts <span class="token operator">=</span> turtle<span class="token punctuation">.</span>getscreen<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    ts<span class="token punctuation">.</span>getcanvas<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>postscript<span class="token punctuation">(</span><span class="token builtin">file</span><span class="token operator">=</span><span class="token string">"work.eps"</span><span class="token punctuation">)</span>
+    <span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image
+
+    im <span class="token operator">=</span> Image<span class="token punctuation">.</span><span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">"work.eps"</span><span class="token punctuation">)</span>
+    im<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"./images/work_</span><span class="token interpolation"><span class="token punctuation">&#123;</span>num<span class="token punctuation">&#125;</span></span><span class="token string">.jpg"</span></span><span class="token punctuation">)</span>
+    turtle<span class="token punctuation">.</span>clear<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    first<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">&#125;</span>
+    ways <span class="token operator">=</span> <span class="token punctuation">[</span>way<span class="token punctuation">,</span> <span class="token punctuation">]</span>
+    history <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">&#125;</span>
+    s <span class="token operator">=</span> <span class="token number">0</span>
+
+    <span class="token keyword">while</span> <span class="token builtin">len</span><span class="token punctuation">(</span>ways<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        new_ways <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token keyword">for</span> item <span class="token keyword">in</span> ways<span class="token punctuation">:</span>
+            x<span class="token punctuation">,</span> y <span class="token operator">=</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">//</span> <span class="token number">50</span><span class="token punctuation">,</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">%</span> <span class="token number">50</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token punctuation">(</span><span class="token number">29</span><span class="token punctuation">,</span> <span class="token number">49</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+                <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token keyword">break</span>
+            <span class="token keyword">if</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">50</span> <span class="token keyword">not</span> <span class="token keyword">in</span> history <span class="token keyword">and</span> x <span class="token operator">&lt;</span> <span class="token number">29</span> <span class="token keyword">and</span> <span class="token keyword">not</span> <span class="token builtin">map</span><span class="token punctuation">[</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">:</span>
+                new_way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'D'</span><span class="token punctuation">&#125;</span>
+                new_ways<span class="token punctuation">.</span>append<span class="token punctuation">(</span>new_way<span class="token punctuation">)</span>
+                history<span class="token punctuation">.</span>add<span class="token punctuation">(</span>new_way<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span> <span class="token keyword">not</span> <span class="token keyword">in</span> history <span class="token keyword">and</span> y <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">and</span> <span class="token keyword">not</span> <span class="token builtin">map</span><span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+                new_way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'L'</span><span class="token punctuation">&#125;</span>
+                new_ways<span class="token punctuation">.</span>append<span class="token punctuation">(</span>new_way<span class="token punctuation">)</span>
+                history<span class="token punctuation">.</span>add<span class="token punctuation">(</span>new_way<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span> <span class="token keyword">not</span> <span class="token keyword">in</span> history <span class="token keyword">and</span> y <span class="token operator">&lt;</span> <span class="token number">49</span> <span class="token keyword">and</span> <span class="token keyword">not</span> <span class="token builtin">map</span><span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+                new_way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'R'</span><span class="token punctuation">&#125;</span>
+                new_ways<span class="token punctuation">.</span>append<span class="token punctuation">(</span>new_way<span class="token punctuation">)</span>
+                history<span class="token punctuation">.</span>add<span class="token punctuation">(</span>new_way<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">50</span> <span class="token keyword">not</span> <span class="token keyword">in</span> history <span class="token keyword">and</span> x <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">and</span> <span class="token keyword">not</span> <span class="token builtin">map</span><span class="token punctuation">[</span>x <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">:</span>
+                new_way <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">'place'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token string">'str'</span><span class="token punctuation">:</span> item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">'U'</span><span class="token punctuation">&#125;</span>
+                new_ways<span class="token punctuation">.</span>append<span class="token punctuation">(</span>new_way<span class="token punctuation">)</span>
+                history<span class="token punctuation">.</span>add<span class="token punctuation">(</span>new_way<span class="token punctuation">[</span><span class="token string">'place'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        first<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> item <span class="token keyword">in</span> new_ways<span class="token punctuation">:</span>
+            parse_way<span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">'str'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        s <span class="token operator">+=</span> <span class="token number">1</span>
+        save<span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+        ways <span class="token operator">=</span> new_ways<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<ul>
+<li>3</li>
+</ul>
+<div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 将图像转化为gif动画与mp4视频</span>
+<span class="token keyword">import</span> cv2
+<span class="token keyword">import</span> os
+<span class="token keyword">import</span> imageio
+
+
+<span class="token keyword">def</span> <span class="token function">pic_to_video</span><span class="token punctuation">(</span>pic_list<span class="token punctuation">,</span> video_name<span class="token punctuation">,</span> fps<span class="token punctuation">,</span> pic_size<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token string">"mp4"</span> <span class="token keyword">in</span> video_name<span class="token punctuation">:</span>
+        video <span class="token operator">=</span> cv2<span class="token punctuation">.</span>VideoWriter<span class="token punctuation">(</span>video_name<span class="token punctuation">,</span> cv2<span class="token punctuation">.</span>VideoWriter_fourcc<span class="token punctuation">(</span><span class="token operator">*</span><span class="token string">'mp4v'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> fps<span class="token punctuation">,</span> pic_size<span class="token punctuation">)</span>
+    <span class="token keyword">elif</span> <span class="token string">".avi"</span> <span class="token keyword">in</span> video_name<span class="token punctuation">:</span>
+        video <span class="token operator">=</span> cv2<span class="token punctuation">.</span>VideoWriter<span class="token punctuation">(</span>video_name<span class="token punctuation">,</span> cv2<span class="token punctuation">.</span>VideoWriter_fourcc<span class="token punctuation">(</span><span class="token operator">*</span><span class="token string">'DIVX'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> fps<span class="token punctuation">,</span> pic_size<span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"格式错误"</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span>
+
+    <span class="token keyword">for</span> filename <span class="token keyword">in</span> pic_list<span class="token punctuation">:</span>
+        <span class="token keyword">if</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            video<span class="token punctuation">.</span>write<span class="token punctuation">(</span>cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    video<span class="token punctuation">.</span>release<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">def</span> <span class="token function">compose_gif</span><span class="token punctuation">(</span>img_paths<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    gif_images <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> path <span class="token keyword">in</span> img_paths<span class="token punctuation">:</span>
+        gif_images<span class="token punctuation">.</span>append<span class="token punctuation">(</span>imageio<span class="token punctuation">.</span>imread<span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    imageio<span class="token punctuation">.</span>mimsave<span class="token punctuation">(</span><span class="token string">"test.gif"</span><span class="token punctuation">,</span> gif_images<span class="token punctuation">,</span> fps<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    image_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string-interpolation"><span class="token string">f'./images/work_</span><span class="token interpolation"><span class="token punctuation">&#123;</span>i<span class="token punctuation">&#125;</span></span><span class="token string">.jpg'</span></span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">187</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+    compose_gif<span class="token punctuation">(</span>image_list<span class="token punctuation">)</span>
+    pic_to_video<span class="token punctuation">(</span>image_list<span class="token punctuation">,</span> <span class="token string">"test.mp4"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">935</span><span class="token punctuation">,</span> <span class="token number">562</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/python/">python</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/09/27/captcha/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">选课系统验证码识别</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/11/%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86%E7%9A%84%E7%AE%80%E5%8D%95%E8%BF%90%E7%94%A8/">
+                        <span class="hidden-mobile">容斥原理的简单运用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+<script  src="https://cdn.jsdelivr.net/gh/suxss/suxss.github.io/js/update-time.js"></script>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline.suxss.workers.dev/","placeholder":"评论仅限讨论，禁止广告行为","path":"window.location.pathname","avatar":"mp","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"avatarCDN":"https://sdn.geekzu.org/avatar/","avatarForce":false,"requiredFields":[],"emojiCDN":null,"emojiMaps":null,"anonymous":null,"emoji":["https://cdn.jsdelivr.net/gh/suxss/image/waline_emoji","https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili","https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/alus"]},
+          {
+            el: '#waline',
+            path: window.location.pathname,
+            dark: 'html[data-user-color-scheme="dark"]'
+          }
+        )
+        new Waline(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+      <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.1/build/highlight.min.js"></script>
+    </div>
+  </div>
+
+
+    <!-- 代码块功能依赖 -->
+    <script  src="https://cdn.jsdelivr.net/gh/suxss/suxss.github.io/lib/codeBlock/codeBlockFuction.js" type="application/x-javascript"></script>
+    <!-- 代码语言 -->
+    
+      <script  src="https://cdn.jsdelivr.net/gh/suxss/suxss.github.io/lib/codeBlock/codeLang.js" type="application/x-javascript"></script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":true,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+    
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-svg-full.js">
+</script>
+<!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?suxss";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="suxss";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/about/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><!-- hexo injector body_end end --></body>
+</html>
